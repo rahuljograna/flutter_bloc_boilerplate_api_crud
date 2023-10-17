@@ -51,6 +51,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             list: [...list],
           ),
         );
+      } else if (response.statusCode == 401) {
+        debugPrint('unauthorized');
+        await _sharedPreferencesManager.clearKey('_authToken');
+        await _sharedPreferencesManager.clearKey('isLoggedIn');
+        emit(
+          state.copyWith(
+            status: HomeStatus.unAuthorized,
+            toastMesssage: 'Unauthorized',
+          ),
+        );
       }
     } catch (e) {
       debugPrint('Something went wrong ${e.toString()}');
